@@ -1,62 +1,96 @@
-# 🎧 Spotify Tracks Recommender & EDA
+# 🎧 Spotify Tracks Recommender & Exploratory Data Analysis (EDA)
 
 ![Spotify Logo](https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg)
 
-A music recommendation and analysis project built using the **Spotify Tracks Dataset** hosted on Hugging Face.  
-We explore musical attributes, genres, and popularity while also building a powerful **semantic recommendation engine** using Sentence Transformers and FAISS.
+Welcome to the **Spotify Tracks Recommender & EDA** project! This notebook blends **data exploration**, **audio analysis**, and **semantic search** to help users discover similar tracks using song metadata and **natural language-based search**.
+
+Leveraging the power of **Sentence Transformers** and **FAISS**, this project enables fast, content-aware music recommendations — going beyond just genres or popularity.
 
 ---
 
 ## 🚀 Tech Stack
 
-| Tool / Library | Badge |
-|----------------|-------|
-| `Python` | ![Python](https://img.shields.io/badge/Python-3670A0?logo=python&logoColor=ffDD54) |
-| `Pandas` | ![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=white) |
-| `NumPy` | ![NumPy](https://img.shields.io/badge/NumPy-013243?logo=numpy&logoColor=white) |
-| `Seaborn` | ![Seaborn](https://img.shields.io/badge/Seaborn-1485C7?logo=seaborn&logoColor=white) |
-| `Matplotlib` | ![Matplotlib](https://img.shields.io/badge/Matplotlib-000000?logo=matplotlib&logoColor=white) |
-| `SentenceTransformers` | ![SentenceTransformers](https://img.shields.io/badge/SBERT-4B8BBE?logo=python&logoColor=white) |
-| `FAISS` | ![FAISS](https://img.shields.io/badge/Faiss-000000?logo=faiss&logoColor=white) |
-| `Scikit-Learn` | ![Scikit-learn](https://img.shields.io/badge/Scikit--Learn-F7931E?logo=scikit-learn&logoColor=white) |
+| Tool / Library        | Badge |
+|-----------------------|-------|
+| `Python`              | ![Python](https://img.shields.io/badge/Python-3670A0?logo=python&logoColor=ffDD54) |
+| `Pandas`              | ![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=white) |
+| `NumPy`               | ![NumPy](https://img.shields.io/badge/NumPy-013243?logo=numpy&logoColor=white) |
+| `Seaborn`             | ![Seaborn](https://img.shields.io/badge/Seaborn-1485C7?logo=seaborn&logoColor=white) |
+| `Matplotlib`          | ![Matplotlib](https://img.shields.io/badge/Matplotlib-000000?logo=matplotlib&logoColor=white) |
+| `Scikit-Learn`        | ![Scikit-learn](https://img.shields.io/badge/Scikit--Learn-F7931E?logo=scikit-learn&logoColor=white) |
+| `SentenceTransformers`| ![SBERT](https://img.shields.io/badge/SBERT-4B8BBE?logo=python&logoColor=white) |
+| `FAISS`               | ![FAISS](https://img.shields.io/badge/Faiss-000000?logo=faiss&logoColor=white) |
 
 ---
 
-## 📁 Dataset
+## 📁 Dataset Overview
 
-- **Source**: [Hugging Face – maharshipandya/spotify-tracks-dataset](https://huggingface.co/datasets/maharshipandya/spotify-tracks-dataset)
-- **Contents**:  
-  - ~160K tracks  
-  - Audio features (e.g. acousticness, energy, valence, tempo)  
-  - Artist metadata, track names, release years  
-- **Format**: `.csv` format loaded via `datasets` or `pandas`
-
----
-
-## 🧪 Main Features
-
-- 📊 **In-depth EDA** on audio and genre attributes
-- 🧠 **Semantic Recommendations** using:
-  - `SentenceTransformer` for query embedding
-  - `FAISS` for fast similarity search in high-dimensional space
-- 📅 Year-wise analysis, genre trends, and feature correlations
+- **Source**: [maharshipandya/spotify-tracks-dataset](https://huggingface.co/datasets/maharshipandya/spotify-tracks-dataset) on Hugging Face 🤗
+- **Size**: ~160,000 unique tracks
+- **Format**: CSV
+- **Attributes**:
+  - Track metadata (name, artist, duration, year)
+  - Audio features (acousticness, danceability, energy, tempo, valence, etc.)
+  - Genre & popularity indicators
+  - Explicit content & release metadata
 
 ---
 
-## 💡 Example Usage
+## ✨ Project Features
 
-```python
+### 🎧 Music Recommender System
+- A **content-aware, hybrid song recommendation engine**.
+- Takes a query in the form of **song title + optional artist list**.
+- Uses **Sentence-BERT embeddings** + **FAISS vector similarity search**.
+- Retrieves songs that are semantically or contextually similar.
 
-# Recommend using full song title and artist
-recommend_songs("Hawayein", ["Arijit Singh"])
+### 📊 Exploratory Data Analysis (EDA)
+- **Genre-based** trends
+- **Audio features** based trends
+- Visualizations using **Seaborn**, **Matplotlib**, and **heatmaps**
 
-# Or just the song name
-recommend_songs("At My Worst")
+### 📦 Modularity
+- Designed with clean separation of concerns:
+  - `data_preprocessing.py`: cleans and normalizes dataset
+  - `embed_tracks.py`: generates sentence embeddings
+  - `build_index.py`: builds FAISS index
+  - `recommend.py`: handles querying and result fetching
+
+---
+
+## 🧠 Recommender System Architecture
+
+```text
++----------------+        +------------------+        +-------------------------+
+| User Input     | --->   | Sentence-BERT    | --->   | Query Embedding (384  text embeddings + 113 musical feature embeddings) |
++----------------+        +------------------+        +-------------------------+
+                                                             |
+                                                             V
+                                                 +--------------------------+
+                                                 |  FAISS Similarity Search |
+                                                 +--------------------------+
+                                                             |
+                                                             V
+                                                +---------------------------+
+                                                | Top-k Song Recommendations|
+                                                +---------------------------+
 ````
 
 ---
 
-## Demo Output
+## 💡 How to Use
+
+```python
+# Example 1: With both song name and artist
+recommend_songs("Hawayein", ["Arijit Singh"])
+
+# Example 2: With only song name (uses popularity to disambiguate)
+recommend_songs("At My Worst")
+```
+
+---
+
+## 📈 Sample Output
 
 ```text
 best match: 'hawayein by pritam, arijit singh'
@@ -78,4 +112,15 @@ Recommendations for 'at my worst':
 5. 'better with you' by ['gentle bones', 'benjamin kheng']
 ```
 
-**Built with ❤️ for music lovers & data explorers**
+---
+
+## 🧪 Performance & Limitations
+
+* ⚡️ **FAISS** ensures fast <1ms retrieval on large vectors.
+* 🔍 Query matching works best with correct song names.
+* 🎤 Works even if artist names are partially incorrect or missing.
+* ⚠️ Can struggle with very rare or misspelled queries (future fix: fuzzy match).
+
+
+### 🎶 Built with ❤️ by a music lover & ML enthusiast
+
